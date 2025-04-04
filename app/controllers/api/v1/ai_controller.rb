@@ -2,29 +2,38 @@ require 'bot'
 
 class Api::V1::AiController < UsageController
   skip_before_action :check_credits, only: [:ai_call_info]
-  
+
   def gen_image
+    type = params['type']
+    raise 'type can not be empty' unless type.present?
+
     prompt = params['prompt'] || 'GHBLI anime style photo'
     raise 'prompt can not be empty' unless prompt.present?
 
     image = params['image']
-    raise 'iamge can not be empty' unless image.present?
+    raise 'image can not be empty' unless image.present?
 
     conversation = current_user.conversations.create
-
-    # generate video task
-    ai_bot = Bot::Replicate.new
-
-    # TODO:需要接受block，init 和更新ai_call
-    images = ai_bot.generate_image(prompt, image: image, model_name: 'aaronaftab/mirage-ghibli')
-    image = images.first
-
     ai_call = conversation.ai_calls.create(
       task_id: SecureRandom.uuid,
       prompt: prompt,
       status: 'submit',
       input: params,
       "cost_credits": current_cost_credits)
+
+    if type.to_i == 0
+      require 'open-uri'
+      ai_call.input_media.attach(io: image.tempfile,
+                                 filename: image.original_filename + Time.now.to_s,
+                                 content_type: image.content_type)
+      image = url_for(ai_call.input_media.last)
+    end
+
+    ai_bot = Bot::Replicate.new
+
+    # TODO:需要接受block，init 和更新ai_call
+    images = ai_bot.generate_image(prompt, image: image, model_name: 'aaronaftab/mirage-ghibli')
+    image = images.first
 
     # OSS
     # TODO: jobs
