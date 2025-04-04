@@ -22,7 +22,8 @@ module CreditsCounter
   end
 
   def used_credits(conversation)
-    conversation.ai_calls.succeeded_ai_calls.sum(:cost_credits)
+    # conversation.ai_calls.succeeded_ai_calls.sum(:cost_credits)
+    conversation.ai_calls.sum(:cost_credits)
   end
 
   module ClassMethods
