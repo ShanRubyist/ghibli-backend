@@ -41,6 +41,7 @@ module Bot
       JSON.load(resp.body) unless @stream
     end
 
+    # TODO: 没有更新status
     def image_api(content, options = {})
       path = options.fetch(:path, '/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent')
       path += "?key=#{@api_key}"
@@ -103,6 +104,10 @@ module Bot
         }
       end
       rst
+    end
+
+    def query_image_task_api(resp)
+      resp
     end
   end
 end
