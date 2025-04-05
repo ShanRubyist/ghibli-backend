@@ -49,7 +49,7 @@ class Api::V1::AiController < UsageController
     SaveToOssJob.perform_later(ai_call,
                                :generated_media,
                                {
-                                 io: URI.open(image),
+                                 io: image,
                                  filename: URI(image).path.split('/').last,
                                  content_type: "image/jpeg"
                                }
