@@ -25,7 +25,7 @@ class Api::V1::AiController < UsageController
 
     if type.to_i == 0
       # OSS
-      SaveToOssJob.perform_now(ai_call,
+      SaveToOssJob.perform_now(ai_call.id,
                                :input_media,
                                {
                                  io: image.tempfile,
@@ -46,7 +46,7 @@ class Api::V1::AiController < UsageController
 
     # OSS
     require 'open-uri'
-    SaveToOssJob.perform_later(ai_call,
+    SaveToOssJob.perform_later(ai_call.id,
                                :generated_media,
                                {
                                  io: images.first,
@@ -83,7 +83,7 @@ class Api::V1::AiController < UsageController
 
     # OSS
     require 'open-uri'
-    SaveToOssJob.perform_later(ai_call,
+    SaveToOssJob.perform_later(ai_call.id,
                                :generated_media,
                                {
                                  io: URI.open(video),

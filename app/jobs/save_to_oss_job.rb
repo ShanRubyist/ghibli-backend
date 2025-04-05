@@ -1,7 +1,7 @@
 class SaveToOssJob < ApplicationJob
   queue_as :default
 
-  def perform(ai_call, type = :generated_media, args)
+  def perform(ai_call_id, type = :generated_media, args)
     media = args.fetch(:io)
 
     io = case media
@@ -12,7 +12,7 @@ class SaveToOssJob < ApplicationJob
            media
          end
 
-    ai_call
+    AiCall.find_by(id: ai_call_id)
       .send(type.to_sym)
       .attach(io: io, filename: args.fetch(:filename), content_type: args.fetch(:content_type))
   end
