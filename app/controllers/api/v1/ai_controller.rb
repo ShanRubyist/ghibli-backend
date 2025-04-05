@@ -13,6 +13,8 @@ class Api::V1::AiController < UsageController
     image = params['image']
     raise 'image can not be empty' unless image.present?
 
+    model_name = 'aaronaftab/mirage-ghibli'
+
     conversation = current_user.conversations.create
     ai_call = conversation.ai_calls.create(
       task_id: SecureRandom.uuid,
@@ -35,7 +37,7 @@ class Api::V1::AiController < UsageController
     end
 
     ai_bot = Bot::Replicate.new
-    task = ai_bot.generate_image(prompt, image: image, model_name: 'aaronaftab/mirage-ghibli')
+    task = ai_bot.generate_image(prompt, image: image, model_name: model_name)
 
     # query task status
     images = ai_bot.query_image_task(task) do |h|

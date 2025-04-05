@@ -5,10 +5,10 @@ class SaveToOssJob < ApplicationJob
     media = args.fetch(:io)
 
     io = case media
-         when media.start_with?('http')
-           require 'uri'
+         when String
+           require 'open-uri'
            URI.open(media)
-         else
+         when Tempfile
            media
          end
 
