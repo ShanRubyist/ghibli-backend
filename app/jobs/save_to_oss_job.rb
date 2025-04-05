@@ -1,13 +1,12 @@
 class SaveToOssJob < ApplicationJob
   queue_as :default
 
-  require 'uri'
-
   def perform(ai_call, type = :generated_media, args)
     media = args.fetch(:io)
 
     io = case media
          when media.start_with?('http')
+           require 'uri'
            URI.open(media)
          else
            media

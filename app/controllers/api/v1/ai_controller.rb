@@ -41,26 +41,20 @@ class Api::V1::AiController < UsageController
     images = ai_bot.query_image_task(task) do |h|
       ai_call.update_ai_call_status(h)
     end
-    image = images.first
-
 
     # OSS
     require 'open-uri'
     SaveToOssJob.perform_later(ai_call,
                                :generated_media,
                                {
-                                 io: image,
+                                 io: images.first,
                                  filename: URI(image).path.split('/').last,
                                  content_type: "image/jpeg"
                                }
     )
 
     render json: {
-      images: (
-        ai_call.generated_media.map do |i|
-          url_for(i)
-        end
-      )
+      images: images
     }
   end
 
@@ -97,11 +91,7 @@ class Api::V1::AiController < UsageController
     )
 
     render json: {
-      videos: (
-        ai_call.generated_media.map do |i|
-          url_for(i)
-        end
-      )
+      videos: [video]
     }
   end
 
