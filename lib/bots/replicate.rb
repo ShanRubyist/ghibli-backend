@@ -11,7 +11,6 @@ module Bot
       version = model.latest_version
       # webhook_url = "https://" + ENV.fetch("HOST") + "/replicate/webhook"
       prediction = version.predict(prompt: prompt,
-                                   #aspect_ratio: aspect_ratio, disable_safety_checker: true,
                                    image: options.fetch(:image),
                                    "model": "dev",
                                    "go_fast": true,
@@ -24,13 +23,10 @@ module Bot
                                    "output_quality": 80,
                                    "prompt_strength": 0.77,
                                    "extra_lora_scale": 1,
-                                   "num_inference_steps": 38
-      # go_fast: true,
-      # guidance_scale: 10,
-      # prompt_strength: 0.77,
-      # num_inference_steps: 38,
-      # afety_tolerance: 5
-                                   )
+                                   "num_inference_steps": 38,
+                                   # disable_safety_checker: true,
+                                   # afety_tolerance: 5
+      )
 
       prediction
     end
