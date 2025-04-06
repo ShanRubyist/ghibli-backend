@@ -58,5 +58,7 @@ module RailsBackendScaffold
 
     # fix ActionController::Redirecting::UnsafeRedirectError (pass allow_other_host: true to redirect anyway.)
     config.action_controller.raise_on_open_redirects = false
+
+    config.autoload_paths += %W(#{config.root}/app/jobs)
   end
 end
