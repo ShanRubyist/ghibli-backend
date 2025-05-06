@@ -37,8 +37,24 @@ class Api::V1::AiController < UsageController
     end
 
     ai_bot = Bot::Replicate.new
-    task = ai_bot.generate_image(prompt, image: image, model_name: model_name)
-
+    task = ai_bot.generate_image(prompt,
+                                 {
+                                   model_name: model_name,
+                                   prompt: prompt,
+                                   image: image,
+                                   "model": "dev",
+                                   "go_fast": true,
+                                   "lora_scale": 1,
+                                   "megapixels": "1",
+                                   "num_outputs": 1,
+                                   "aspect_ratio": "1:1",
+                                   "output_format": "webp",
+                                   "guidance_scale": 10,
+                                   "output_quality": 80,
+                                   "prompt_strength": 0.77,
+                                   "extra_lora_scale": 1,
+                                   "num_inference_steps": 38,
+                                 })
     # query task status
     images = ai_bot.query_image_task(task) do |h|
       ai_call.update_ai_call_status(h)
