@@ -139,7 +139,7 @@ class Api::V1::AiController < UsageController
         input: item.input,
         data: item.data,
         created_at: item.created_at,
-        cost_credits: item.cost_credits,
+        cost_credits: (item.status=='success' ? item.cost_credits : 0),
         system_prompt: item.system_prompt,
         business_type: item.business_type
       }
